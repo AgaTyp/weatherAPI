@@ -3,9 +3,7 @@ package pl.agntyp.weatherapi;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-
-import java.time.LocalDate;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class WeatherController {
@@ -17,18 +15,20 @@ public class WeatherController {
     }
 
     @GetMapping("/")
-    public String home(Model model) {
-        WeatherData weatherData = new WeatherData();
-
-        model.addAttribute("weatherCity", weatherData.getCity());
-
+    public String home() {
         return "home";
     }
 
-    @PostMapping("/getWeather")
-    public String getWeather(String weatherCity) {
-        WeatherData weatherData = weatherService.getResponse(weatherCity);
+    @GetMapping("/getWeather")
+    public String getWeather(@RequestParam String city, Model model) {
+        WeatherData weatherData = weatherService.getResponse(city);
+        model.addAttribute("weather", weatherData);
 
-        return "redirect:/";
+        return "weather";
+    }
+
+    @GetMapping("/error")
+    public String error() {
+        return "redirect:/error";
     }
 }
